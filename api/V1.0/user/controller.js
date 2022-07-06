@@ -2,6 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const { response } = require("../../../utils");
 const logs = require("../../../helpers/logger");
 const userService = require("./user");
+const APIError = require("../../../helpers/api-error");
 // const { message } = require("../../../helpers");
 module.exports = {
   getUser: async (req, res, next) => {
@@ -15,6 +16,17 @@ module.exports = {
           "2344"
         )
       );
+    } catch (error) {
+      logs.serverLogger(error);
+      next(error);
+    }
+  },
+  login : async(req, res, next)=>{
+    try {
+      const userDetails = await userService.login(req.body);
+      res.status(userDetails.status);
+      res.send(response(userDetails.message, 
+        userDetails.data))
     } catch (error) {
       logs.serverLogger(error);
       next(error);

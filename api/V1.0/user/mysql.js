@@ -19,6 +19,21 @@ class UserDatabase {
             throw new APIError(error.message , StatusCodes.BAD_REQUEST);
         }
     }
+    async getUser(info){
+        try {
+            const sqlProcedutrCall = "call getUser(?, ?, ?)";
+            console.log("In the ")
+            const userDetails = await mysqlConnection(sqlProcedutrCall,[
+                info.email,
+                info.user_id
+            ]);
+            
+            // console.log(userDetails);
+            return userDetails[0][0];
+        } catch (error) {
+            throw new APIError(error.message , StatusCodes.BAD_REQUEST);
+        }
+    }
 }
 
 module.exports = new UserDatabase();

@@ -26,6 +26,45 @@ module.exports = {
     return refreshToken;
   },
 
+  validateToken : async (req, res, next) => {
+    const { headers } = req;
+    try {
+      if (headers["x-auth-token"]) {
+        const tokenDecryptInfo = await verifyToken(headers["x-auth-token"]);
+        if (tokenDecryptInfo.data) {
+          res.locals.token = tokenDecryptInfo.data;
+          const token = await generateToken(tokenDecryptInfo.data);
+          res.header("x-auth-token", token);
+          next();
+        } else {
+          res.status(StatusCodes.UNAUTHORIZED);
+          res.send(
+            response(
+              message.sessionExpired,
+              {}
+            )
+          );
+        }
+      } else {
+        res.status(StatusCodes.UNAUTHORIZED);
+        res.send(
+          response(
+            message.tokenMissing,
+            {}
+          )
+        );
+      }
+    } catch (e) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR);
+      res.send(
+        response(
+          e.message,
+          {}
+        )
+      );
+    }
+  },
+
   verifyToken: token => {
     try {
       const decodedData = jwt.verify(token, config.jwtTokenKey);
