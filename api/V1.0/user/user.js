@@ -10,7 +10,7 @@ const { fileUpload, generateToken } = require("../../../utils");
 class UserService {
   async signUp(data){
     try{
-      if(!data.email || !data.password){
+      if(!data.email || !data.password || !data.username ){
         throw new APIError(message.badRequest, StatusCodes.BAD_REQUEST);
       }
       const userDetails =await UserDatabase.SignUp(data);
@@ -39,6 +39,7 @@ class UserService {
       ){
         throw new APIError(message.badRequest, StatusCodes.Bad)
       }
+      data.action = "profile";
 			const userDetails = await UserDatabase.submitProfile(data);
       console.log(userDetails);
       if (Object.keys(userDetails).length === 0) {

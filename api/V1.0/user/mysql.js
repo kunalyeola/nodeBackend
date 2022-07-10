@@ -5,11 +5,12 @@ const  mysqlConnection = require("../../../helpers/database");
 class UserDatabase {
     async SignUp (info) {
         try {
-            const sqlProcedutrCall = "call signUp(?, ?, ?)";
+            const sqlProcedutrCall = "call signUp(?, ?, ?, ?)";
             console.log("In the ")
             const userDetails = await mysqlConnection(sqlProcedutrCall,[
                 info.email,
                 info.password,
+                info.username,
                 info.role_id = 1
             ]);
             
