@@ -9,6 +9,7 @@ router.get("/get-data", userController.getUser);
 router.post("/file-handle", userController.getFiles);
 router.post("/sign-up",userController.signUp);
 router.post("/login", userController.login);
+router.post("/profile", validateToken ,userController.submitProfile);
 router.get("/get-data1", userController.getData);
 
 module.exports = router;

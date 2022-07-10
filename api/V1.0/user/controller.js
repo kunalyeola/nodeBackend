@@ -21,6 +21,17 @@ module.exports = {
       next(error);
     }
   },
+  submitProfile : async(req, res, next)=>{
+    try {
+      const userDetails = await userService.submitProfile(req.body, res.locals.token);
+      res.status(userDetails.status);
+      res.send(response(userDetails.message, 
+        userDetails.data))
+    } catch (error) {
+      logs.serverLogger(error);
+      next(error);
+    }
+  },
   login : async(req, res, next)=>{
     try {
       const userDetails = await userService.login(req.body);
