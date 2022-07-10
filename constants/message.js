@@ -1,5 +1,5 @@
 module.exports = {
-  success: "Succesfull",
+  success: "Success",
   badRequest : "Bad Request, request is made with invalid arguments",
   noData : "No data is avalible",
   dbError: "database Error"

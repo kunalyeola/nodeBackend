@@ -13,13 +13,18 @@ class UserService {
       if(!data.email || !data.password || !data.username ){
         throw new APIError(message.badRequest, StatusCodes.BAD_REQUEST);
       }
+      const user = await UserDatabase.getUser({ email:data.email });
+
+      if (Object.keys(user).length != 0) {
+				throw new APIError(`${data.email} is aleredy registerd`, StatusCodes.NOT_FOUND);
+			}
       const userDetails =await UserDatabase.SignUp(data);
       console.log(userDetails);
       if (Object.keys(userDetails).length === 0) {
 				throw new APIError(message.noData, StatusCodes.NOT_FOUND);
 			}
       
-     
+
       return {
         status : StatusCodes.OK,
         message : message.success,
