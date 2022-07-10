@@ -4,7 +4,7 @@ const message = require("../../../constants/message");
 // const message = require("../../../constants/message");
 const APIError = require("../../../helpers/api-error");
 const UserDatabase = require("./mysql");
-const { fileUpload } = require("../../../utils");
+const { fileUpload, generateToken } = require("../../../utils");
 // const {validateToken} = require("../../../middlewares");
 
 class UserService {
@@ -35,18 +35,16 @@ class UserService {
         throw new APIError(message.badRequest, StatusCodes.Bad)
       }
 			const userDetails = await UserDatabase.getUser(data);
-      
+      console.log(userDetails);
       if (Object.keys(userDetails).length === 0) {
 				throw new APIError(message.noData, StatusCodes.NOT_FOUND);
 			}
       delete userDetails.password;
 			const token = await generateToken(userDetails);
+      console.log(token)
 			const userData = {
 				user_id: userDetails.user_id,
 				role_id: userDetails.role_id,
-				is_profile_info_filled: userDetails.email && userDetails.wallet_address ? 1 : 0,
-				wallet_address: userDetails.wallet_address,
-				is_member: userDetails.is_member,
 				x_auth_token: token
 			};
 			return {

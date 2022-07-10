@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 require("./helpers/database");
 const { errorMiddleware } = require("./middlewares");
 const fileUpload = require("express-fileupload");
-
+"Use Strice"
 const corsOptions = {
   origin: "*",
   methods: ["GET", "PUT", "PATCH", "POST", "DELETE"],

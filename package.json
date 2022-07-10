@@ -4,6 +4,8 @@
   "description": "This is new Boiler plate ",
   "main": "www",
   "scripts": {
+    "postinstall": "node ./bin/www",
+    "test": "cross-env NODE_ENV=development ./bin/www",
     "lint": "eslint . --ext .js",
     "lint:fix": "npm run lint -- --fix",
     "start": "cross-env NODE_ENV=production nodemon ./bin/www",
@@ -37,6 +39,7 @@
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "pino": "^8.1.0",
+    "postinstall": "^0.7.4",
     "tmp": "^0.2.1",
     "web3": "^1.7.4"
   }

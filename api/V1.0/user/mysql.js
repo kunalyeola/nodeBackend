@@ -21,15 +21,20 @@ class UserDatabase {
     }
     async getUser(info){
         try {
-            const sqlProcedutrCall = "call getUser(?, ?, ?)";
+            const sqlProcedutrCall = "call getUser(?, ?)";
             console.log("In the ")
             const userDetails = await mysqlConnection(sqlProcedutrCall,[
+                typeof info.user_id !== "undefined" && info.user_id ? info.user_id : null,
                 info.email,
-                info.user_id
+                
             ]);
             
-            // console.log(userDetails);
-            return userDetails[0][0];
+            console.log(userDetails);
+            let user = {};
+			if (typeof userDetails !== "undefined" && typeof userDetails[0] !== "undefined" && typeof userDetails[0][0] !== "undefined") {
+				user = userDetails[0][0];
+			}
+			return user;
         } catch (error) {
             throw new APIError(error.message , StatusCodes.BAD_REQUEST);
         }
