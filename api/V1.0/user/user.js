@@ -70,6 +70,9 @@ class UserService {
       if (Object.keys(userDetails).length === 0) {
 				throw new APIError(message.noData, StatusCodes.NOT_FOUND);
 			}
+      if(userDetails.password != data.password){
+        throw new APIError(`Invalid detaills`, StatusCodes.BAD_REQUEST);
+      }
       delete userDetails.password;
 			const token = await generateToken(userDetails);
       console.log(token)
