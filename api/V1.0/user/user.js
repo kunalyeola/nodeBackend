@@ -29,6 +29,31 @@ class UserService {
       throw new APIError(error.message, StatusCodes.BAD_REQUEST)
     }
   }
+  async submitProfile(data, token){
+    try{
+      if(
+        !token.userId ||
+        !data.username ||
+        !data.fullname ||
+        !data.bloodgroup 
+      ){
+        throw new APIError(message.badRequest, StatusCodes.Bad)
+      }
+			const userDetails = await UserDatabase.submitProfile(data);
+      console.log(userDetails);
+      if (Object.keys(userDetails).length === 0) {
+				throw new APIError(message.noData, StatusCodes.NOT_FOUND);
+			}
+     	
+			return {
+				status: StatusCodes.OK,
+				message: message.success,
+				data: {}
+			};
+		} catch (error) {
+			throw new APIError(error.message, error.status, error.data);
+		}
+  }
   async login(data){
     try{
       if(!data.email || !data.password){
