@@ -21,6 +21,18 @@ module.exports = {
       next(error);
     }
   },
+  forgotPassword :async(req,res, next)=>{
+    try {
+      const userDetails = await userService.forgotPassword(req.body);
+      res.status(userDetails.status);
+      res.send(response(userDetails.message, 
+        userDetails.data))
+    } catch (error) {
+      logs.serverLogger(error);
+      next(error);
+    }
+  },
+  
   submitProfile : async(req, res, next)=>{
     try {
       const userDetails = await userService.submitProfile(req.body, res.locals.token);
@@ -89,5 +101,20 @@ module.exports = {
       logs.serverLogger(error);
       next(error);
     }
+  },
+  resetPassword :async(req, res, next)=>{
+    try {
+			const userDetails = await userService.resetPassword(res.locals.requestBody);
+			res.status(userDetails.status);
+			res.send(
+				response(
+					userDetails.message,
+					userDetails.data
+				)
+			);
+		} catch (error) {
+			logger.serverLogger(error);
+			next(error);
+		}
   }
 };

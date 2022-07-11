@@ -2,6 +2,8 @@ const path = require("path");
 
 module.exports = {
   rootDir: path.resolve(__dirname),
+  apiHost : process.env.API_HOST,
+  apiUrl : process.env.API_URL,
   dbHost: process.env.DB_HOST,
   dbName: process.env.DB_NAME,
   dbPassword: process.env.DB_PASSWORD,

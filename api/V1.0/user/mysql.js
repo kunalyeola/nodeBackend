@@ -46,9 +46,9 @@ class UserDatabase {
     }
     async getUser(info){
         try {
-            const sqlProcedutrCall = "call getUser(?, ?)";
+            const sqlProcedureCall = "call getUser(?, ?)";
             console.log("In the ")
-            const userDetails = await mysqlConnection(sqlProcedutrCall,[
+            const userDetails = await mysqlConnection(sqlProcedureCall,[
                 typeof info.user_id !== "undefined" && info.user_id ? info.user_id : null,
                 info.email,
                 
