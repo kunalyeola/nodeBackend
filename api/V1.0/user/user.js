@@ -4,7 +4,7 @@ const message = require("../../../constants/message");
 // const message = require("../../../constants/message");
 const APIError = require("../../../helpers/api-error");
 const UserDatabase = require("./mysql");
-const { fileUpload, generateToken } = require("../../../utils");
+const { fileUpload, generateToken , sendEmail } = require("../../../utils");
 // const {validateToken} = require("../../../middlewares");
 
 class UserService {
@@ -23,8 +23,16 @@ class UserService {
       if (Object.keys(userDetails).length === 0) {
 				throw new APIError(message.noData, StatusCodes.NOT_FOUND);
 			}
-      
-
+      // let emailBody = fs
+			// 		.readFileSync(`${config.rootDir}/templates/email/forgot-password.html`, "utf8")
+			// 		.toString();
+			// 	emailBody = emailBody
+			// 		.replace("$email_logo_link", `${config.apiURL}${config.emailLogoURL}`)
+			// 		.replace("$link", link)
+			// 		.replace("$link", link);
+        let emailBody = `hello Welocme to BloodBank apllication `
+				const email = await sendEmail(data.email, message.signUpEmail, emailBody);
+        console.log(email);
       return {
         status : StatusCodes.OK,
         message : message.success,

@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
 const fs = require("fs");
 const tmp = require("tmp");
+const nodemailer = require("nodemailer");
 
 module.exports = {
   response: (msg, data = {}) => {
@@ -174,6 +175,30 @@ module.exports = {
       return 1;
     } catch (error) {
       return 0;
+    }
+  },
+ sendEmail : async (to, subject, body) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      port: 587,
+      auth: {
+        user: config.SMTPEmail,
+        pass: config.SMTPPassword
+      }
+    });
+    const mailOptions = {
+      from: `${config.SMTPFromName}<${config.SMTPEmail}>`,
+      to,
+      subject,
+      html: body
+    };
+  
+   
+      const emailDetails = await transporter.sendMail(mailOptions);
+      return emailDetails;
+    } catch (error) {
+      return "";
     }
   }
 

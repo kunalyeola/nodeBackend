@@ -7,5 +7,10 @@ module.exports = {
   dbPassword: process.env.DB_PASSWORD,
   dbUser: process.env.DB_USERNAME,
   dbPort: process.env.DB_PORT,
-  jwtPrivateKet: process.env.JWT_SECRET_KEY
+  jwtPrivateKet: process.env.JWT_SECRET_KEY,
+  SMTPPassword: process.env.SMTP_PASSWORD,
+  SMTPEmail : process.env.SMTP_EMAIL,
+  SMTPPassword : process.env.SMTP_PASSWORD,
+  SMTPFromName : process.env.SMTP_FROMNAME,
+  SMTPHost : process.env.SMTP_HOST
 };
