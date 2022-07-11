@@ -138,7 +138,7 @@ class UserService {
 				!data.password ||
 				!data.token
 			) {
-				throw new ApiError(message.badRequest, StatusCodes.BAD_REQUEST);
+				throw new APIError(message.badRequest, StatusCodes.BAD_REQUEST);
 			}
 
 			const user = await verifyToken(data.token);
@@ -160,7 +160,7 @@ class UserService {
 				}
 			};
 		} catch (error) {
-			throw new ApiError(error.message, error.status);
+			throw new APIError(error.message, error.status);
 		}
 	}
 
