@@ -142,7 +142,7 @@ class UserService {
 			}
 
 			const user = await verifyToken(data.token);
-			const userDetails = await commonDatabase.getUser({ email: user.data.email });
+			const userDetails = await UserDatabase.getUser({ email: user.data.email });
 			if (Object.keys(userDetails).length === 0) {
 				throw new APIError(message.noData, StatusCodes.NOT_FOUND);
 			}
@@ -150,7 +150,7 @@ class UserService {
 			data.user_id = userDetails.user_id;
 			data.password = encryptString(data.password);
 			data.action = "password";
-			await commonDatabase.submitUser(data);
+			await UserDatabase.submitUser(data);
 
 			return {
 				status: StatusCodes.OK,
