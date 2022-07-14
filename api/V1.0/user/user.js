@@ -97,7 +97,7 @@ class UserService {
 				data: userData
 			};
 		} catch (error) {
-			throw new APIError(error.message, error.status, error.data);
+			throw new APIError(error.message, error.status);
 		}
   }
   async forgotPassword(data){
@@ -112,7 +112,7 @@ class UserService {
       console.log(userDetails);
       if (Object.keys(userDetails).length > 0) {
 				const token = await generateToken({ email: data.email, role_id: userDetails.role_id });
-				let link =`${config.apiUrl}/user/reset-password/?q=${token}`
+				let link =`${config.apiUrl}/?q=${token}`
 				let emailBody = fs  
 					.readFileSync(`${config.rootDir}/templates/forgot-password.html`, "utf8")
 					.toString();
@@ -129,8 +129,40 @@ class UserService {
 				data: {}
 			};
 		} catch (error) {
-			throw new APIError(error.message, error.status, error.data);
+			throw new APIError(error.message, error.status);
 		}
+  }
+  async getuserlist(options){
+	try{
+		const userDetails = UserDatabase.getuserlist(options);
+		if (Object.keys(userDetails).length === 0) {
+			throw new APIError(message.noData, StatusCodes.NOT_FOUND);
+		}
+		return {
+			status : StatusCodes.OK,
+			message : "Success",
+			data : userDetails
+		}
+
+	}catch(error){
+		throw new APIError(error.message, error.status)
+	}
+  }
+  async getUserById(userId){
+	try{
+		const userDetails = UserDatabase.getUser({user_id : userId});
+		if (Object.keys(userDetails).length === 0) {
+			throw new APIError(message.noData, StatusCodes.NOT_FOUND);
+		}
+		return {
+			status : StatusCodes.OK,
+			message : "Success",
+			data : userDetails
+		}
+
+	}catch(error){
+		throw new APIError(error.message, error.status)
+	}
   }
   async resetPassword(data) {
 		try {
@@ -150,11 +182,11 @@ class UserService {
 			data.user_id = userDetails.user_id;
 			data.password = encryptString(data.password);
 			data.action = "password";
-			await UserDatabase.submitUser(data);
+			await UserDatabase.submitProfile(data);
 
 			return {
 				status: StatusCodes.OK,
-				message: message.resetPassword,
+				message: "Password reset successfully",
 				data: {
 					role_id: userDetails.role_id
 				}

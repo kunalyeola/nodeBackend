@@ -7,6 +7,6 @@ router.get("/", (req, res) => {
 });
 
 router.use("/user", require("./user/routes"));
-router.use("/web3", require("./web3/routes"));
+// router.use("/web3", require("./web3/routes"));
 // router.use("/hospital", require("./hospital/routes"));
 module.exports = router;

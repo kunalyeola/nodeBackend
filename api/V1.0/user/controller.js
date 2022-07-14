@@ -21,6 +21,17 @@ module.exports = {
       next(error);
     }
   },
+  getUserById : async(req,res, next)=>{
+    try {
+      const userDetails = await userService.getUserById(req.params.user_id);
+      res.status(userDetails.status);
+      res.send(response(userDetails.message, 
+        userDetails.data))
+    } catch (error) {
+      logs.serverLogger(error);
+      next(error);
+    }
+  },
   forgotPassword :async(req,res, next)=>{
     try {
       const userDetails = await userService.forgotPassword(req.body);
@@ -93,13 +104,17 @@ module.exports = {
       next(error);
     }
   },
-  getData: async(req, res, next)=>{
+  getuserlist: async(req, res, next)=>{
     try {
-     res.status(StatusCodes.OK)
-    res.send(response("hi hello", "kunal"))
+      const userDetails = await userService.getuserlist(req.query);
+      console.log(userDetails);
+      res.status(userDetails.status);
+      res.send(
+        response(userDetails.message, userDetails.data)
+      );
     } catch (error) {
       logs.serverLogger(error);
-      next(error);
+      next(error)
     }
   },
   resetPassword :async(req, res, next)=>{

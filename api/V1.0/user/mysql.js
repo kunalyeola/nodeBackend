@@ -45,6 +45,29 @@ class UserDatabase {
             throw new APIError(error.message , StatusCodes.BAD_REQUEST);
         }
     }
+    async getuserlist(options){
+        try {
+            const sqlProcedureCall = "call getUserList(?, ?)";
+            console.log("In the ")
+            const limit = options.limit ? parseInt(options.limit) : null;
+			let offset = options.offset ? parseInt(options.offset) : null;
+			offset = (offset - 1) * limit;
+
+            const userDetails = await mysqlConnection(sqlProcedureCall,[
+               limit,
+               offset    
+            ]);
+            
+            console.log(userDetails);
+            let user = {};
+			if (typeof userDetails !== "undefined" && typeof userDetails[0] !== "undefined" && typeof userDetails[0][0] !== "undefined") {
+				user = userDetails[0][0];
+			}
+			return user;
+        } catch (error) {
+            throw new APIError(error.message , StatusCodes.BAD_REQUEST);
+        }
+    }
     async getUser(info){
         try {
             const sqlProcedureCall = "call getUser(?, ?)";
