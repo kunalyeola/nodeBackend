@@ -28,7 +28,7 @@ module.exports = {
       res.send(response(userDetails.message, 
         userDetails.data))
     } catch (error) {
-      logs.serverLogger(error);
+      // logs.serverLogger(error);
       next(error);
     }
   },
@@ -46,12 +46,13 @@ module.exports = {
   
   submitProfile : async(req, res, next)=>{
     try {
-      const userDetails = await userService.submitProfile(req.body, res.locals.token);
+      const userDetails = await userService.submitProfile(req.body);
+      
       res.status(userDetails.status);
       res.send(response(userDetails.message, 
         userDetails.data))
     } catch (error) {
-      logs.serverLogger(error);
+      // logs.serverLogger(error);
       next(error);
     }
   },
@@ -119,7 +120,8 @@ module.exports = {
   },
   resetPassword :async(req, res, next)=>{
     try {
-			const userDetails = await userService.resetPassword(res.locals.requestBody);
+      console.log(req.body);
+			const userDetails = await userService.resetPassword(req.body);
 			res.status(userDetails.status);
 			res.send(
 				response(
@@ -128,7 +130,7 @@ module.exports = {
 				)
 			);
 		} catch (error) {
-			logger.serverLogger(error);
+			//logger.serverLogger(error);
 			next(error);
 		}
   }

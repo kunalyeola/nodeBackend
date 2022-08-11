@@ -6,7 +6,7 @@ const APIError = require("../../../helpers/api-error");
 const UserDatabase = require("./mysql");
 const validator = require("validator");
 const fs = require("fs");
-const { fileUpload, generateToken , sendEmail } = require("../../../utils");
+const { fileUpload, generateToken , verifyToken,sendEmail } = require("../../../utils");
 // const {validateToken} = require("../../../middlewares");
 
 class UserService {
@@ -37,25 +37,26 @@ class UserService {
         console.log(email);
       return {
         status : StatusCodes.OK,
-        message : message.success,
+        message : "User Registered Successfully",
         data : userDetails.user_id
       }
     }catch(error){
       throw new APIError(error.message, StatusCodes.BAD_REQUEST)
     }
   }
-  async submitProfile(data, token){
+  async submitProfile(data){
     try{
       if(
-        !token.userId ||
-        !data.username ||
+        !data.userId ||
+        !data.user_name ||
         !data.fullname ||
-        !data.bloodgroup 
+        !data.blood_group 
       ){
         throw new APIError(message.badRequest, StatusCodes.Bad)
       }
       data.action = "profile";
 			const userDetails = await UserDatabase.submitProfile(data);
+			
       console.log(userDetails);
       if (Object.keys(userDetails).length === 0) {
 				throw new APIError(message.noData, StatusCodes.NOT_FOUND);
@@ -63,7 +64,7 @@ class UserService {
      	
 			return {
 				status: StatusCodes.OK,
-				message: message.success,
+				message: "User Profile Updated Successfully",
 				data: {}
 			};
 		} catch (error) {
@@ -89,11 +90,12 @@ class UserService {
 			const userData = {
 				user_id: userDetails.user_id,
 				role_id: userDetails.role_id,
+				email: data.email,
 				x_auth_token: token
 			};
 			return {
 				status: StatusCodes.OK,
-				message: message.login,
+				message: "User logged In Successfully",
 				data: userData
 			};
 		} catch (error) {
@@ -112,7 +114,14 @@ class UserService {
       console.log(userDetails);
       if (Object.keys(userDetails).length > 0) {
 				const token = await generateToken({ email: data.email, role_id: userDetails.role_id });
-				let link =`${config.apiUrl}/?q=${token}`
+				// let link =`${config.apiUrl}/?q=${token}`
+				let bufferObj = Buffer.from(token, "utf8");
+				// Encode the Buffer as a base64 string
+				let base64String = bufferObj.toString("base64");
+				
+				
+				// let link =`${config.apiUrl}/user/reset-password/?q=${token}`
+        		let link =`${config.apiUrl}/reset_password/${base64String}`
 				let emailBody = fs  
 					.readFileSync(`${config.rootDir}/templates/forgot-password.html`, "utf8")
 					.toString();
@@ -150,8 +159,9 @@ class UserService {
   }
   async getUserById(userId){
 	try{
-		const userDetails = UserDatabase.getUser({user_id : userId});
-		if (Object.keys(userDetails).length === 0) {
+		const userDetails =await UserDatabase.getUser({user_id : userId});
+		console.log(userDetails );
+		if (Object.keys(userDetails).length == 0) {
 			throw new APIError(message.noData, StatusCodes.NOT_FOUND);
 		}
 		return {
@@ -166,21 +176,27 @@ class UserService {
   }
   async resetPassword(data) {
 		try {
+			console.log(data);
 			if (
 				!data.password ||
 				!data.token
 			) {
 				throw new APIError(message.badRequest, StatusCodes.BAD_REQUEST);
 			}
+			let bufferObj1 = Buffer.from(data.token, "base64");
 
-			const user = await verifyToken(data.token);
-			const userDetails = await UserDatabase.getUser({ email: user.data.email });
+			// Encode the Buffer as a utf8 string
+			let decodedString = bufferObj1.toString("utf8");
+			
+			const user = await verifyToken(decodedString);
+			
+			const userDetails = await UserDatabase.getUser({ email: user.email });
 			if (Object.keys(userDetails).length === 0) {
 				throw new APIError(message.noData, StatusCodes.NOT_FOUND);
 			}
 
-			data.user_id = userDetails.user_id;
-			data.password = encryptString(data.password);
+			data.userId = userDetails.user_id;
+			data.password = data.password;
 			data.action = "password";
 			await UserDatabase.submitProfile(data);
 

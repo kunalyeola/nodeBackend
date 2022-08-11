@@ -22,16 +22,16 @@ class UserDatabase {
     }
     async submitProfile(info){
         try {
+           
             const sqlProcedutrCall = "call submitProfile(?, ?, ?, ?, ?, ?, ?)";
-            console.log("In the ")
             const userDetails = await mysqlConnection(sqlProcedutrCall,[
-                typeof info.user_id !== "undefined" && info.user_id ? info.user_id : null,
+                typeof info.userId !== "undefined" && info.userId ? info.userId : null,
                 typeof info.action !== "undefined" && info.action ? info.action : '',
-                typeof info.username !== "undefined" && info.username ? info.username : '',
+                typeof info.user_name !== "undefined" && info.user_name ? info.user_name : '',
                 typeof info.fullname !== "undefined" && info.fullname ? info.fullname : '',
-                typeof info.bloodgruop !== "undefined" && info.bloodgruop ? info.bloodgruop : '',
+                typeof info.contact_number !== "undefined" && info.contact_number ? info.contact_number : '',
+                typeof info.blood_group !== "undefined" && info.blood_group ? info.blood_group : '',
                 typeof info.password !== "undefined" && info.password ? info.password : '',
-                action
                                 
             ]);
             
@@ -72,9 +72,10 @@ class UserDatabase {
         try {
             const sqlProcedureCall = "call getUser(?, ?)";
             console.log("In the ")
+            console.log("info",info);
             const userDetails = await mysqlConnection(sqlProcedureCall,[
                 typeof info.user_id !== "undefined" && info.user_id ? info.user_id : null,
-                info.email,
+                typeof info.email !== "undefined" && info.email ? info.email : ''
                 
             ]);
             

@@ -1,4 +1,3 @@
-require("../api/V1.0/web3/web3service");
 const env = require("dotenv");
 env.config({ path: process.env.NODE_ENV === "production" ? ".env" : ".env.development" });
 const app = require("../app");
