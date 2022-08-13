@@ -5,5 +5,6 @@ module.exports = {
   dbError: "database Error",
   signUpEmail : "You are email is registered on the application",
   resetPasswordEmailSubject: "Reset Password",
+  successmail :"Emergency blood Request",
   forgotPassword : "An email with reset password link has been sent to your email address"
 };

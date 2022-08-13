@@ -12,7 +12,7 @@ const { fileUpload, generateToken , verifyToken,sendEmail } = require("../../../
 class UserService {
   async signUp(data){
     try{
-      if(!data.email || !data.password || !data.username ){
+      if(!data.email || !data.password || !data.username || !data.user_type ){
         throw new APIError(message.badRequest, StatusCodes.BAD_REQUEST);
       }
       const user = await UserDatabase.getUser({ email:data.email });
@@ -33,7 +33,7 @@ class UserService {
 			// 		.replace("$link", link)
 			// 		.replace("$link", link);
         let emailBody = `hello Welcome to BloodBank application `
-				const email = await sendEmail(data.email, message.signUpEmail, emailBody);
+		const email = await sendEmail(data.email, message.signUpEmail, emailBody);
         console.log(email);
       return {
         status : StatusCodes.OK,
@@ -208,6 +208,36 @@ class UserService {
 				}
 			};
 		} catch (error) {
+			throw new APIError(error.message, error.status);
+		}
+	}
+
+	async emergencyBlood(data)
+	{
+		try{
+			if( 
+				!data.name ||
+				!data.email ||
+				!data.blood_group ||
+				!data.city
+			)
+			throw new APIError(message.badRequest, StatusCodes.BAD_REQUEST);
+			// console.log(userDetails );
+			
+
+			const details = await UserDatabase.emergencyBlood(data);
+				let emailBody = "<h1>Hey user you are craeted request for Blood</h1>";
+
+			await sendEmail(data.email, message.successmail, emailBody);
+			return {
+				status: StatusCodes.OK,
+				message: "blood request sent succesfully",
+				data: {
+					
+				}
+			};
+		}
+		catch (error) {
 			throw new APIError(error.message, error.status);
 		}
 	}

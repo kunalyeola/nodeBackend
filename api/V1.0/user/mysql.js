@@ -11,7 +11,7 @@ class UserDatabase {
                 info.email,
                 info.password,
                 info.username,
-                info.role_id = 1
+                info.role_id = info.user_type
             ]);
             
             // console.log(userDetails);
@@ -66,6 +66,24 @@ class UserDatabase {
 			return user;
         } catch (error) {
             throw new APIError(error.message , StatusCodes.BAD_REQUEST);
+        }
+    }
+    async emergencyBlood(info){
+        try{
+            const sqlProcedutrCall = "call emergencyBlood(?, ?, ?, ?)";
+            const bloodDetails = await mysqlConnection(sqlProcedutrCall,[
+                typeof info.name !== "undefined" && info.name ? info.name : "",
+                typeof info.email !== "undefined" && info.email ? info.email : '',
+                typeof info.city !== "undefined" && info.city ? info.city : '',
+                typeof info.blood_group !== "undefined" && info.blood_group ? info.blood_group : '',
+                                
+            ]);
+            let user = {};
+			if (typeof userDetails !== "undefined" && typeof userDetails[0] !== "undefined" && typeof userDetails[0][0] !== "undefined") {
+				user = userDetails[0][0];
+			}return user;
+        }catch(error){
+            throw new APIError(error.message, StatusCodes.BAD_REQUEST);
         }
     }
     async getUser(info){

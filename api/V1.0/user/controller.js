@@ -118,6 +118,22 @@ module.exports = {
       next(error)
     }
   },
+  emergency : async(req, res, next)=>{
+    try {
+      console.log(req.body);
+			const emergencyDetails = await userService.emergencyBlood(req.body);
+			res.status(emergencyDetails.status);
+			res.send(
+				response(
+					emergencyDetails.message,
+					emergencyDetails.data
+				)
+			);
+		} catch (error) {
+			//logger.serverLogger(error);
+			next(error);
+		}
+  },
   resetPassword :async(req, res, next)=>{
     try {
       console.log(req.body);
